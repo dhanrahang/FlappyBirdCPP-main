@@ -388,6 +388,12 @@ int main()
                     resetRound();
                 }
 
+               if (gameOver)
+                {
+                    resetRound();
+                    continue;
+                }
+
                if (!gameOver)  // Only jump when game is active
                 {
                     // Play jump sound
