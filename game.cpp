@@ -187,7 +187,24 @@ int main()
     const char *path = SDL_GetBasePath();
     std::string fullPath = std::string(path) + "img/flappy.png";
     
-    SDL_Surface *sprite = IMG_Load(fullPath.c_str());
+    auto loadImageWithPngFallback = [](const std::string &filePath) -> SDL_Surface *
+    {
+        SDL_Surface *surface = IMG_Load(filePath.c_str());
+        if (surface)
+        {
+            return surface;
+        }
+
+        // Some web builds may fail auto-detection; force PNG as a fallback.
+        SDL_IOStream *io = SDL_IOFromFile(filePath.c_str(), "rb");
+        if (!io)
+        {
+            return nullptr;
+        }
+        return IMG_LoadTyped_IO(io, true, "PNG");
+    };
+
+    SDL_Surface *sprite = loadImageWithPngFallback(fullPath);
     if (!sprite)
     {
         cout << "IMG LOAD ERROR (required file): " << fullPath << " -> " << SDL_GetError() << endl;
@@ -199,7 +216,7 @@ int main()
     }
 
     std::string textPath = std::string(path) + "img/text.png" ;
-    SDL_Surface *text = IMG_Load(textPath.c_str());
+    SDL_Surface *text = loadImageWithPngFallback(textPath);
 
     SDL_Texture *spriteTex = SDL_CreateTextureFromSurface(ren, sprite);
     SDL_Texture *txt = nullptr;
