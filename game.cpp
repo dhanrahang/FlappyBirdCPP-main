@@ -4,6 +4,9 @@
 #include <math.h>
 #include <cstdlib>
 #include <ctime>
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 using namespace std;
 
 #define WIDTH 800
@@ -479,6 +482,11 @@ int main()
         }
 
         SDL_RenderPresent(ren);
+
+#ifdef __EMSCRIPTEN__
+        // Yield to the browser event loop so the page stays responsive.
+        emscripten_sleep(0);
+#endif
     }
 
     delete pipe;

@@ -46,6 +46,7 @@ if(EMSCRIPTEN)
         "SHELL:--preload-file ${CMAKE_SOURCE_DIR}/img@/img"
         "SHELL:--preload-file ${CMAKE_SOURCE_DIR}/audio@/audio"
         "-sALLOW_MEMORY_GROWTH=1"
+        "-sASYNCIFY"
         "-sASSERTIONS=1"
     )
     set_target_properties(game PROPERTIES SUFFIX ".html")
