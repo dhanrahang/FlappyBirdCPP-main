@@ -188,19 +188,18 @@ int main()
     std::string fullPath = std::string(path) + "img/flappy.png";
     
     SDL_Surface *sprite = IMG_Load(fullPath.c_str());
-
-    std::string textPath = std::string(path) + "img/text.png" ;
-    SDL_Surface *text = IMG_Load(textPath.c_str());
-
     if (!sprite)
     {
-        cout << "IMG LOAD ERROR : " << SDL_GetError() << endl;
+        cout << "IMG LOAD ERROR (required file): " << fullPath << " -> " << SDL_GetError() << endl;
         if (sprite) SDL_DestroySurface(sprite);
         SDL_DestroyRenderer(ren);
         SDL_DestroyWindow(win);
         SDL_Quit();
         return 1;
     }
+
+    std::string textPath = std::string(path) + "img/text.png" ;
+    SDL_Surface *text = IMG_Load(textPath.c_str());
 
     SDL_Texture *spriteTex = SDL_CreateTextureFromSurface(ren, sprite);
     SDL_Texture *txt = nullptr;
@@ -213,7 +212,7 @@ int main()
     }
     else
     {
-        cout << "Warning: img/text.png not found. Using flappy texture for menu text." << endl;
+        cout << "Warning: optional file missing: " << textPath << ". Using flappy texture for menu text." << endl;
         txt = spriteTex;
     }
     SDL_DestroySurface(sprite);
